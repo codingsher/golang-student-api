@@ -1,4 +1,5 @@
 This API includes complete implementation of Http Requests i.e Get, Post, Patch, Delete using Golang's net/http standard library and SQLite database. This API has been coded using production level API structure that is efficient for future plugin integration/changes, testing etc.
+This is a simple RestAPI that uses SQLite to store students data i.e Name, Email, and Age.
 
 To test the API, follow these steps:
 
