@@ -109,7 +109,7 @@ func UpdateByID(storage storage.Storage) http.HandlerFunc {
 			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
 		}
 
-		lastId, err := storage.UpdateStudentByID(
+		rowsAffected, err := storage.UpdateStudentByID(
 			intId,
 			student.Name,
 			student.Email,
@@ -118,8 +118,8 @@ func UpdateByID(storage storage.Storage) http.HandlerFunc {
 		if err != nil {
 			response.WriteJson(w, http.StatusInternalServerError, err)
 		}
-		slog.Info("User updated Successfully", slog.String("user id", fmt.Sprint(lastId)))
+		slog.Info("User updated Successfully", slog.String("rows affected", fmt.Sprint(rowsAffected)))
 
-		response.WriteJson(w, http.StatusCreated, map[string]int64{"id": lastId})
+		response.WriteJson(w, http.StatusCreated, map[string]int64{"rows_affected": rowsAffected})
 	}
 }
