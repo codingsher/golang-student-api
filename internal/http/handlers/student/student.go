@@ -107,6 +107,7 @@ func UpdateByID(storage storage.Storage) http.HandlerFunc {
 		}
 		if err != nil {
 			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
 		}
 
 		rowsAffected, err := storage.UpdateStudentByID(
@@ -117,6 +118,30 @@ func UpdateByID(storage storage.Storage) http.HandlerFunc {
 		)
 		if err != nil {
 			response.WriteJson(w, http.StatusInternalServerError, err)
+			return
+		}
+		slog.Info("User updated Successfully", slog.String("rows affected", fmt.Sprint(rowsAffected)))
+
+		response.WriteJson(w, http.StatusCreated, map[string]int64{"rows_affected": rowsAffected})
+	}
+}
+
+func DeleteByID(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		slog.Info("Getting student", slog.String("id", id))
+
+		intId, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			slog.Error("error converting id into int64", slog.String("err", err.Error()))
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		rowsAffected, err := storage.DeleteStudentByID(intId)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
 		}
 		slog.Info("User updated Successfully", slog.String("rows affected", fmt.Sprint(rowsAffected)))
 
